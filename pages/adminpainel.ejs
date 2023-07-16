@@ -1,0 +1,42 @@
+<html>
+
+<head>
+    <title>Administrador</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/b04821f065.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/adminpainel.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lobster+Two:wght@400;700&family=Martian+Mono:wght@800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <h2 class="titulo">Administrador</h2>
+    <div class="header-painel">
+
+        <h3 class="titulohorario">Adicionar novo horario</h3>
+        <form method="post" action="/admin/cadastro">
+            <div class="horario">
+                <input type="number" name="hora" placeholder="hh"><span>:</span><input type="number" name="minutos"
+                    placeholder="mm">
+            </div>
+            <input type="submit" name="acao" value="Cadastrar">
+
+        </form>
+
+    </div>
+
+    <h2 class="tituloListaHorario">Listas de horarios</h2>
+    <% horarios.forEach((horario)=> { %>
+        <div class="horarios">
+            <p>Hora: <%= horario.hora %>, Disponibilidade: <%= horario.disponibilidade %>
+            </p>
+            <a href="/admin/delete/<%= horario.id %>"><i class="fa-sharp fa-solid fa-trash"></i></a>
+        </div>
+        <% }) %>
+</body>
+
+</html>

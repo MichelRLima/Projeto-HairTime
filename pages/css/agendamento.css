@@ -1,0 +1,91 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+h2 {
+    margin: 20px auto;
+    text-align: center;
+
+    width: 100%;
+    font-family: 'Lobster Two', cursive;
+
+
+}
+
+h3 {
+    margin-top: 20px;
+
+    text-align: center;
+    font-family: 'Lobster Two', cursive;
+    font-size: 15px;
+}
+
+.data {
+    margin: 20px auto;
+    text-align: center;
+    width: 100%;
+    font-family: 'Lobster Two', cursive;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+input[type=text] {
+    text-align: center;
+
+    margin: 20px auto;
+    width: 100%;
+    max-width: 300px;
+    border-radius: 5px;
+    height: 20px;
+}
+
+.horario-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+}
+
+.horario-button.selecionado {
+    background-color: rgb(77, 126, 77);
+    color: #fff;
+    margin-top: 10px;
+}
+
+input[type=submit] {
+    width: 100px;
+    cursor: pointer;
+    height: 50px;
+    border-radius: 5px;
+    border: none;
+    background-color: rgb(27, 90, 27);
+    font-family: 'Lobster Two', cursive;
+    color: white;
+    margin: 0 auto;
+}
+
+input[type=submit]:hover {
+    background-color: rgb(51, 172, 51);
+}
+
+#horarios-content {
+
+    margin: 30px 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#horarios-content button {
+    margin: 10px 15px;
+}

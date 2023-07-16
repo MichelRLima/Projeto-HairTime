@@ -1,0 +1,155 @@
+<html>
+
+<head>
+    <title>Agendamento</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="css/agendamento.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lobster+Two:wght@400;700&family=Martian+Mono:wght@800&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+    <h2> Agendamento</h2>
+
+    <form id="agendamento-form" method="post" action="/agendamento/sucess">
+        <h3>Digite seu nome:</h3>
+        <input type="text" name="nome" placeholder="Nome" required>
+        <% /* <input type="checkbox" name="opcao1" value="true">
+            <label for="opcao1">Opção 1</label>
+
+            <input type="checkbox" name="opcao2" value="true">
+            <label for="opcao2">Opção 2</label>
+
+            <input type="checkbox" name="opcao3" value="true">
+            <label for="opcao3">Opção 3</label>
+            */%>
+
+            <h3>Horários disponíveis hoje:</h3>
+            <div class="data"></div>
+            <div id="horarios-content">
+                <% function obterHorarioAtual() { const dataAtual=new Date(); const hora=dataAtual.getHours(); const
+                    minuto=dataAtual.getMinutes(); return new Date(0, 0, 0, hora, minuto); } %>
+
+                    <% horarios.sort((a, b)=> {
+                        const horaA = a.hora.split(':')[0];
+                        const minutoA = a.hora.split(':')[1];
+                        const horarioA = new Date(0, 0, 0, horaA, minutoA);
+
+                        const horaB = b.hora.split(':')[0];
+                        const minutoB = b.hora.split(':')[1];
+                        const horarioB = new Date(0, 0, 0, horaB, minutoB);
+
+                        return horarioA - horarioB;
+                        });
+
+                        for (let i = 0; i < horarios.length; i++) { %>
+                            <% const horario=new Date(0, 0, 0, horarios[i].hora.split(':')[0],
+                                horarios[i].hora.split(':')[1]); %>
+                                <% if (horarios[i].disponibilidade && horario>= obterHorarioAtual()) { %>
+                                    <button type="button" class="horario-button" data-horario="<%= horarios[i].hora %>">
+                                        <%= horarios[i].hora %>
+                                    </button>
+                                    <% } %>
+                                        <% } %>
+            </div>
+
+
+            <input type="hidden" name="horario" id="horario-selecionado">
+
+
+            <input type="submit" name="acao" value="Agendar">
+    </form>
+
+</body>
+
+
+<script>
+    const buttons = document.querySelectorAll('.horario-button');
+    const horarioSelecionadoInput = document.getElementById('horario-selecionado');
+
+    buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+            // Remover a classe "selecionado" de todos os botões
+            buttons.forEach((btn) => btn.classList.remove('selecionado'));
+
+            // Adicionar a classe "selecionado" ao botão clicado
+            button.classList.add('selecionado');
+
+            // Obter o horário selecionado do botão clicado
+            const horarioSelecionado = button.dataset.horario;
+
+            // Atualizar o valor do campo oculto
+            horarioSelecionadoInput.value = horarioSelecionado;
+
+        });
+    });
+
+    // Obter o horário atual como objeto Date
+    function obterHorarioAtual() {
+        const dataAtual = new Date();
+        const horaAtual = dataAtual.getHours();
+        const minutoAtual = dataAtual.getMinutes();
+        return new Date(0, 0, 0, horaAtual, minutoAtual);
+    }
+
+    // Manipular o evento de submit do formulário
+    document.getElementById('agendamento-form').addEventListener('submit', (event) => {
+        // Verificar se um horário foi selecionado
+        const horarioSelecionado = document.querySelector('.horario-button.selecionado');
+        if (!horarioSelecionado) {
+            event.preventDefault(); // Impedir o envio do formulário se nenhum horário estiver selecionado
+            alert('Selecione um horário antes de enviar o formulário.');
+        } else {
+            const horarioAtual = obterHorarioAtual();
+            const horarioSelecionado = new Date(horarioSelecionado.dataset.horario);
+
+            if (horarioSelecionado < horarioAtual) {
+                event.preventDefault(); // Impedir o envio do formulário se o horário selecionado for anterior ao horário atual
+            }
+        }
+    });
+</script>
+
+
+<script>
+    function obterHorarioAtual() {
+        const dataAtual = new Date();
+        const hora = dataAtual.getHours();
+        const minuto = dataAtual.getMinutes();
+        return `${hora}:${minuto}`;
+    }
+</script>
+<script>
+    // Obter a referência para a div com a classe "data"
+    const dataDiv = document.querySelector('.data');
+
+    // Obter a data atual
+    const dataAtual = new Date();
+
+    // Formatar a data no formato desejado (exemplo: DD/MM/AAAA)
+    const dia = dataAtual.getDate().toString().padStart(2, '0');
+    const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0');
+    const ano = dataAtual.getFullYear();
+
+    // Inserir a data formatada na div
+    dataDiv.textContent = `${dia}/${mes}/${ano}`;
+</script>
+
+
+
+
+
+<style>
+
+</style>
+
+
+
+</html>

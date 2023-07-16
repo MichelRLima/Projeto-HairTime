@@ -1,0 +1,310 @@
+<html>
+
+<head>
+    <title>Agendamento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lobster+Two:wght@400;700&family=Martian+Mono:wght@800&display=swap"
+        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+
+
+</head>
+
+<h4>HairTime</h4>
+<div class="relogio"></div>
+<h2><i class="fa-solid fa-scissors" style="color: #ffffff;"></i>Próximo atendimento<i
+        class="fas fa-scissors fa-flip-horizontal" style="color: #ffffff;"></i></h2>
+
+
+<body>
+
+
+    <div id="agendamentos-content">
+
+
+
+
+
+        <div class="atendimentoAtual">
+
+            <% if (agendamentos.length> 0) {
+                const agora = new Date();
+                const agendamentoMaisCedo = agendamentos
+                .filter(agendamento => {
+                const horarioAgendamento = new Date();
+                const [hora, minuto] = agendamento.horario.split(':');
+                horarioAgendamento.setHours(hora, minuto);
+
+                return horarioAgendamento > agora;
+                })
+                .sort((a, b) => {
+                const horarioA = new Date();
+                const horarioB = new Date();
+                const [horaA, minutoA] = a.horario.split(':');
+                const [horaB, minutoB] = b.horario.split(':');
+                horarioA.setHours(horaA, minutoA);
+                horarioB.setHours(horaB, minutoB);
+
+                return horarioA - horarioB;
+                })[0];
+
+                if (agendamentoMaisCedo) { %>
+                <div class="atendimentoMaisCedo">
+                    <p class="nome">
+                        <%= agendamentoMaisCedo.nome %>
+                    </p>
+                    <p class="hora">
+                        Horário: <%= agendamentoMaisCedo.horario %>
+                    </p>
+
+                    <% if (agendamentoMaisCedo.opcao1) { %>
+                        <p>Opção 1</p>
+                        <% } %>
+
+                            <% if (agendamentoMaisCedo.opcao2) { %>
+                                <p>Opção 2</p>
+                                <% } %>
+
+                                    <% if (agendamentoMaisCedo.opcao3) { %>
+                                        <p>Opção 3</p>
+                                        <% } %>
+                </div>
+                <% } else { %>
+                    <p>Nenhum agendamento encontrado.</p>
+                    <% } } %>
+        </div>
+
+
+
+
+
+
+        <h2 class="tituloAtendimento">Atendimentos de hoje</h2>
+        <div class="containerAtendimento">
+            <% agendamentos .filter(agendamento=> {
+                const horarioAgendamento = new Date().setHours(
+                agendamento.horario.split(':')[0],
+                agendamento.horario.split(':')[1]
+                );
+                const horarioAtual = new Date();
+
+                return horarioAgendamento > horarioAtual;
+                })
+                .sort((a, b) => a.horario.localeCompare(b.horario))
+                .forEach((agendamento) => { %>
+                <div class="atendimento">
+                    <p class="nome">
+                        <%= agendamento.nome %>
+                    </p>
+                    <p class="hora">
+                        Horario: <%= agendamento.horario %>
+                    </p>
+
+                    <% if (agendamento.opcao1) { %>
+                        <p>Opção 1</p>
+                        <% } %>
+
+                            <% if (agendamento.opcao2) { %>
+                                <p>Opção 2</p>
+                                <% } %>
+
+                                    <% if (agendamento.opcao3) { %>
+                                        <p>Opção 3</p>
+                                        <% } %>
+                </div>
+                <% }) %>
+
+
+        </div>
+
+
+
+
+
+    </div>
+
+
+    <script src="https://kit.fontawesome.com/b04821f065.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+    </script>
+    <script>
+        const socketIO = io(); // Inicializa uma conexão Socket.IO e armazena em uma variável chamada socketIO
+        console.log("conectado"); // Exibe uma mensagem no console indicando que a conexão foi estabelecida
+
+        // Quando receber um evento 'atualizacaoAgendamentos' do servidor via Socket.IO
+        socketIO.on('atualizacaoAgendamentos', () => {
+            atualizarDivContainerAtendimento(); // Chama a função para atualizar a div "containerAtendimento"
+        });
+
+        function atualizarDivAtendimentoAtual(agendamentos) {
+            // Função para atualizar a div "atendimentoAtual" com base nos agendamentos recebidos
+            const agora = new Date(); // Obtém a data e hora atual
+            const agendamentoMaisCedo = agendamentos
+                .filter((agendamento) => {
+                    // Filtra os agendamentos com horário posterior ao atual
+                    const horarioAgendamento = new Date();
+                    const [hora, minuto] = agendamento.horario.split(':');
+                    horarioAgendamento.setHours(hora, minuto);
+
+                    return horarioAgendamento > agora;
+                })
+                .sort((a, b) => {
+                    // Ordena os agendamentos em ordem crescente de horário
+                    const horarioA = new Date();
+                    const horarioB = new Date();
+                    const [horaA, minutoA] = a.horario.split(':');
+                    const [horaB, minutoB] = b.horario.split(':');
+                    horarioA.setHours(horaA, minutoA);
+                    horarioB.setHours(horaB, minutoB);
+
+                    return horarioA - horarioB;
+                })[0];
+
+            if (agendamentoMaisCedo) {
+                // Se houver um agendamento mais cedo, cria o HTML correspondente e atualiza a div "atendimentoAtual"
+                var html = '<div class="atendimentoMaisCedo">';
+                html += '<p class="nome">' + agendamentoMaisCedo.nome + '</p>';
+
+                html += '<p class="hora">Horário: ' + agendamentoMaisCedo.horario + '</p>';
+
+                if (agendamentoMaisCedo.opcao1) {
+                    html += '<p>Opção 1</p>';
+                }
+
+                if (agendamentoMaisCedo.opcao2) {
+                    html += '<p>Opção 2</p>';
+                }
+
+                if (agendamentoMaisCedo.opcao3) {
+                    html += '<p>Opção 3</p>';
+                }
+
+                html += '</div>';
+
+                $('.atendimentoAtual').html(html);
+            } else {
+                // Se não houver agendamento encontrado, exibe uma mensagem indicando isso na div "atendimentoAtual"
+                $('.atendimentoAtual').html('<p class="nome">Nenhum agendamento encontrado.</p>');
+            }
+        }
+
+        function atualizarDivContainerAtendimento() {
+            // Função para obter os dados atualizados do servidor e atualizar a div "containerAtendimento"
+
+            // Exemplo de código para fazer uma requisição AJAX para obter os dados atualizados
+            $.ajax({
+                url: '/agendamentos-json', // URL da rota que retorna os dados atualizados do servidor
+                method: 'GET',
+                dataType: 'json', // Tipo de dados esperado (no caso, JSON)
+                success: function (data) {
+                    // Função de callback executada quando a requisição AJAX é bem-sucedida
+                    const horarioAtual = new Date(); // Obtém a data e hora atual
+                    const agendamentosFiltrados = data
+                        .filter(function (agendamento) {
+                            const horarioAgendamento = new Date(
+                                horarioAtual.getFullYear(),
+                                horarioAtual.getMonth(),
+                                horarioAtual.getDate(),
+                                parseInt(agendamento.horario.split(':')[0]),
+                                parseInt(agendamento.horario.split(':')[1])
+                            );
+                            return horarioAgendamento > horarioAtual;
+                        })
+                        .sort(function (a, b) {
+                            const horarioA = new Date(
+                                horarioAtual.getFullYear(),
+                                horarioAtual.getMonth(),
+                                horarioAtual.getDate(),
+                                parseInt(a.horario.split(':')[0]),
+                                parseInt(a.horario.split(':')[1])
+                            );
+                            const horarioB = new Date(
+                                horarioAtual.getFullYear(),
+                                horarioAtual.getMonth(),
+                                horarioAtual.getDate(),
+                                parseInt(b.horario.split(':')[0]),
+                                parseInt(b.horario.split(':')[1])
+                            );
+                            return horarioA - horarioB;
+                        });
+
+                    // Atualiza a div "containerAtendimento" com base nos agendamentos filtrados
+                    var html = '';
+                    agendamentosFiltrados.forEach(function (agendamento) {
+                        html += '<div class="atendimento">';
+                        html += '<p class="nome">' + agendamento.nome + '</p>';
+                        html += '<p class="hora">Horario: ' + agendamento.horario + '</p>';
+                        // Outras propriedades do agendamento
+                        html += '</div>';
+                    });
+                    $('.containerAtendimento').html(html);
+
+                    // Chama a função para atualizar a div "atendimentoAtual" com base nos agendamentos filtrados
+                    atualizarDivAtendimentoAtual(agendamentosFiltrados);
+
+                    // Verifica e remove os agendamentos que já passaram do horário atual
+                    verificarAgendamentosPassados();
+                },
+                error: function (error) {
+                    // Função de callback executada quando ocorre um erro na requisição AJAX
+                    console.log('Erro ao buscar os dados atualizados:', error);
+                },
+            });
+        }
+
+        function verificarAgendamentosPassados() {
+            // Função para verificar e remover os agendamentos que já passaram do horário atual
+            const horarioAtual = new Date(); // Obtém a data e hora atual
+            $('.containerAtendimento .atendimento').each(function () {
+                // Percorre cada div de agendamento na div "containerAtendimento"
+                const horarioAgendamento = new Date(
+                    horarioAtual.getFullYear(),
+                    horarioAtual.getMonth(),
+                    horarioAtual.getDate(),
+                    parseInt($(this).find('p:nth-child(2)').text().split(':')[1].trim()),
+                    parseInt($(this).find('p:nth-child(2)').text().split(':')[2].trim())
+                );
+                if (horarioAgendamento <= horarioAtual) {
+                    // Se o horário do agendamento for menor ou igual ao horário atual, remove a div do agendamento
+                    $(this).remove();
+                }
+            });
+        }
+
+        function atualizarRelogio() {
+            var dataAtual = new Date(); // Obtém a data e hora atual
+            var hora = dataAtual.getHours(); // Obtém a hora atual
+            var minuto = dataAtual.getMinutes(); // Obtém os minutos atuais
+            var segundo = dataAtual.getSeconds(); // Obtém os segundos atuais
+
+            // Adiciona zeros à esquerda para garantir que tenham 2 dígitos
+            hora = hora < 10 ? "0" + hora : hora;
+            minuto = minuto < 10 ? "0" + minuto : minuto;
+            segundo = segundo < 10 ? "0" + segundo : segundo;
+
+            var horarioFormatado = hora + ":" + minuto + ":" + segundo; // Formata o horário no formato HH:MM:SS
+
+            // Atualiza o conteúdo da div com a classe "relogio" com o horário formatado
+            $(".relogio").text(horarioFormatado);
+
+        }
+
+        setInterval(atualizarRelogio, 1000); // Atualiza o relógio a cada segundo
+
+        //atualizarDivContainerAtendimento(); // Executa a função inicialmente para obter os dados e atualizar as divs correspondentes
+        setInterval(atualizarDivContainerAtendimento, 10000); // Agendar a execução repetida a cada 1 minuto
+        setInterval(verificarAgendamentosPassados, 1000); // Verificar continuamente a cada 1 segundo
+    </script>
+
+
+
+</body>
+</body>
+
+</html>

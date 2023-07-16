@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+h2 {
+
+    margin: 20px auto;
+    text-align: center;
+
+    width: 100%;
+    font-family: 'Lobster Two', cursive;
+
+
+
+}
+
+.icone {
+    display: flex;
+    justify-content: center;
+    /* Centralizar horizontalmente */
+    align-items: center;
+
+
+
+}
+
+i {
+    width: 80px;
+}
+
+.dados {
+    text-align: center;
+}
+
+.obs {
+    color: #818181;
+}
