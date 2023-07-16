@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 // Criar instância do Express
 const app = express();
-const port = 3000; // Porta do servidor
+const port = 3002; // Porta do servidor
 const bodyParser = require('body-parser');
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
