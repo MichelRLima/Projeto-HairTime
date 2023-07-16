@@ -170,7 +170,6 @@ app.get('/agendamentos-json', (req, res) => {
 
 
 
-
 //roda para acessar a aba de agendamentos
 app.get('/agendamento', (req, res) => {
     horarios.find() //função para puxar todos os horarios
@@ -199,14 +198,32 @@ app.post('/agendamento/sucess', async (req, res) => {
     const opcao2 = req.body.opcao2; // Converte o valor da opção 2 para um valor booleano
     const opcao3 = req.body.opcao3; // Converte o valor da opção 3 para um valor booleano
     const horarioSelecionado = req.body.horario; // Recupera o valor do horário selecionado no botão
+    let disponibilidade = false
 
     try {
+        const horario = await horarios.findOne({ hora: horarioSelecionado }).exec();
+
+        if (horario && horario.disponibilidade) {
+            disponibilidade = true;
+            console.log(disponibilidade)
+        } else {
+            disponibilidade = false;
+            console.log(disponibilidade)
+        }
+    } catch (err) {
+        console.error('Erro ao buscar o horário:', err);
+        // Trate o erro de acordo com suas necessidades
+    }
+
+
+    try {
+
         // Obtenha a data e a hora atual
         const dataAtual = new Date();
         const horarioAtual = dataAtual.getHours() + ":" + dataAtual.getMinutes();
 
         // Verifique se o horário selecionado é posterior ao horário atual
-        if (new Date(horarioSelecionado) < horarioAtual) {
+        if (new Date(horarioSelecionado) < horarioAtual || disponibilidade === false) {
 
             return res.redirect('/erro'); // Redireciona para a página de erro em caso de selecionar um horario indisponivel
         }
@@ -233,6 +250,8 @@ app.post('/agendamento/sucess', async (req, res) => {
         console.log('Agendamento salvo com sucesso');
         io.emit('atualizacaoAgendamentos'); // Emita um evento 'atualizacaoAgendamentos' para todos os clientes via Socket.IO
         res.redirect(`/sucesso?nome=${nome}&opcao1=${opcao1}&opcao2=${opcao2}&opcao3=${opcao3}&horario=${horarioSelecionado}`);
+
+
     } catch (err) {
         console.error('Erro ao salvar o agendamento:', err);
         return res.status(400).send(err.message);
