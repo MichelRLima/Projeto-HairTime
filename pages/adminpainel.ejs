@@ -30,13 +30,28 @@
     </div>
 
     <h2 class="tituloListaHorario">Listas de horarios</h2>
-    <% horarios.forEach((horario)=> { %>
-        <div class="horarios">
-            <p>Hora: <%= horario.hora %>, Disponibilidade: <%= horario.disponibilidade %>
-            </p>
-            <a href="/admin/delete/<%= horario.id %>"><i class="fa-sharp fa-solid fa-trash"></i></a>
-        </div>
-        <% }) %>
+
+
+    <% horarios.sort((a, b)=> {
+        const horaA = a.hora.split(':')[0];
+        const minutoA = a.hora.split(':')[1];
+        const horarioA = new Date(0, 0, 0, horaA, minutoA);
+
+        const horaB = b.hora.split(':')[0];
+        const minutoB = b.hora.split(':')[1];
+        const horarioB = new Date(0, 0, 0, horaB, minutoB);
+
+        return horarioA - horarioB;
+        }); %>
+
+        <% horarios.forEach((horario)=> { %>
+            <div class="horarios">
+                <p>Hora: <%= horario.hora %>, Disponibilidade: <%= horario.disponibilidade %>
+                </p>
+                <a href="/admin/delete/<%= horario.id %>"><i class="fa-sharp fa-solid fa-trash"></i></a>
+            </div>
+            <% }); %>
+
 </body>
 
 </html>
