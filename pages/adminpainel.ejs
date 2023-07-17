@@ -29,7 +29,7 @@
 
     </div>
 
-    <h2 class="tituloListaHorario">Listas de horarios</h2>
+    <h2 class="tituloListaHorario">Listas de horarios Disponíveis</h2>
 
 
     <% horarios.sort((a, b)=> {
@@ -46,11 +46,31 @@
 
         <% horarios.forEach((horario)=> { %>
             <div class="horarios">
-                <p>Hora: <%= horario.hora %>, Disponibilidade: <%= horario.disponibilidade %>
+                <p>Hora: <%= horario.hora %>
                 </p>
                 <a href="/admin/delete/<%= horario.id %>"><i class="fa-sharp fa-solid fa-trash"></i></a>
             </div>
             <% }); %>
+
+                <h2 class="tituloListaHorario">Lista de agendamentos</h2>
+
+                <div class="agendamentos">
+                    <% agendamentos.sort((a, b)=> (a.horario > b.horario) ? 1 : -1).forEach((agendamento) => { %>
+                        <div class="agendamento">
+                            <p>Nome: <%= agendamento.nome %>
+                            </p>
+                            <p>Hora: <%= agendamento.horario %>
+                            </p>
+                            <a href="/admin/delete/agendamento/<%= agendamento.id %>">
+                                <i class="fa-sharp fa-solid fa-trash"></i>
+                            </a>
+                        </div>
+                        <% }); %>
+                </div>
+
+
+
+
 
 </body>
 

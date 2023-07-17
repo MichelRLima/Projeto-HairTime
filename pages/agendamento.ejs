@@ -49,16 +49,21 @@
                         return horarioA - horarioB;
                         });
 
-                        for (let i = 0; i < horarios.length; i++) { %>
-                            <% const horario=new Date(0, 0, 0, horarios[i].hora.split(':')[0],
-                                horarios[i].hora.split(':')[1]); %>
-                                <% if (horarios[i].disponibilidade && horario>= obterHorarioAtual()) { %>
-                                    <button type="button" class="horario-button" data-horario="<%= horarios[i].hora %>">
-                                        <%= horarios[i].hora %>
-                                    </button>
-                                    <% } %>
-                                        <% } %>
+                        let horarioDisponivel = false;
+
+                        for (let i = 0; i < horarios.length; i++) { const horario=new Date(0, 0, 0,
+                            horarios[i].hora.split(':')[0], horarios[i].hora.split(':')[1]); if
+                            (horarios[i].disponibilidade && horario>= obterHorarioAtual()) {
+                            horarioDisponivel = true;
+                            %>
+                            <button type="button" class="horario-button" data-horario="<%= horarios[i].hora %>">
+                                <%= horarios[i].hora %>
+                            </button>
+                            <% } } if (!horarioDisponivel) { %>
+                                <p>Nenhum horário disponível para hoje.</p>
+                                <% } %>
             </div>
+
 
 
             <input type="hidden" name="horario" id="horario-selecionado">

@@ -113,7 +113,8 @@ app.get('/login', async (req, res) => {
     } else {
         try {
             const todosHorarios = await horarios.find();
-            res.render('adminpainel', { horarios: todosHorarios });
+            const todosAgendamentos = await Agendamento.find();
+            res.render('adminpainel', { horarios: todosHorarios, agendamentos: todosAgendamentos });
         } catch (err) {
             console.error('Erro ao buscar os horários:', err);
             res.status(500).send('Erro interno do servidor');
@@ -134,7 +135,7 @@ app.post('/login', (req, res) => {
 
 });
 
-// Rota para exclusão de um post
+// Rota para exclusão de um horario
 app.get('/admin/delete/:id', (req, res) => {
     horarios.deleteOne({ _id: req.params.id })
         .then(() => {
@@ -144,6 +145,27 @@ app.get('/admin/delete/:id', (req, res) => {
             // Lida com o erro, se necessário
         });
 });
+
+app.get('/admin/delete/agendamento/:id', async (req, res) => {
+    try {
+        const agendamento = await Agendamento.findById(req.params.id);
+        const horaAgendamento = agendamento.horario;
+        await horarios.findOneAndUpdate(
+            { hora: horaAgendamento },
+            { disponibilidade: true }
+        );
+
+        await Agendamento.deleteOne({ _id: req.params.id });
+
+        res.redirect('/login');
+    } catch (error) {
+        // Lida com o erro, se necessário
+        console.error('Erro ao excluir o agendamento:', error);
+        res.status(500).send('Erro interno do servidor');
+    }
+});
+
+
 app.post('/admin/cadastro', (req, res) => {
     horarios.create({
         hora: req.body.hora + ":" + req.body.minutos,
