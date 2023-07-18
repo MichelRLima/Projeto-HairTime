@@ -50,7 +50,7 @@ i {
     border: 1px solid rgb(255, 255, 255);
     border-radius: 15px;
     margin: 0 auto;
-    max-width: 600px;
+    max-width: 900px;
     background-color: white;
 
 }
@@ -63,14 +63,14 @@ i {
 }
 
 .atendimentoMaisCedo .nome {
-    font-size: 55px;
-    font-family: 'Lobster Two', cursive;
+    font-size: 85px;
+    font-family: 'Roboto', sans-serif;
     color: rgb(0, 0, 0);
 
 }
 
 .atendimentoMaisCedo .hora {
-    font-size: 20px;
+    font-size: 35px;
     font-family: 'Lobster Two', cursive;
     margin-top: 15px;
     color: rgb(0, 0, 0);
@@ -117,7 +117,7 @@ i {
 }
 
 .atendimento .nome {
-    font-family: 'Lobster Two', cursive;
+    font-family: 'Roboto', sans-serif;
     color: white;
 }
 
@@ -127,9 +127,10 @@ i {
 }
 
 .atendimentoAtual .nome {
-    font-family: 'Lobster Two', cursive;
+    font-family: 'Roboto', sans-serif;
     text-align: center;
     color: rgb(0, 0, 0);
     width: 80%;
     margin: 0 auto;
+
 }
